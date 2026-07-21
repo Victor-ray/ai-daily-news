@@ -6,30 +6,53 @@ PROMPT = ROOT / "config" / "ai_analysis_prompt.txt"
 INTERESTS = ROOT / "config" / "ai_interests.txt"
 
 
-def test_analysis_prompt_is_tailored_for_ai_and_internship_digest():
+def test_analysis_prompt_has_three_sections():
+    """Prompt 包含三大板块：热点速览、AI资讯、求职实习"""
     text = PROMPT.read_text(encoding="utf-8")
 
-    assert "AI 每日情报助手" in text
-    assert "实习" in text
-    assert "校招" in text
-    assert "行动项" in text
-    assert "投递线索" in text
+    assert "今日热点速览" in text
+    assert "AI 资讯" in text
+    assert "求职与实习" in text
+
+    # 对应 JSON 字段
+    assert "core_trends" in text
+    assert "rss_insights" in text
+    assert "outlook_strategy" in text
 
 
 def test_analysis_prompt_keeps_json_contract():
+    """保持 JSON 6 字段输出格式"""
     text = PROMPT.read_text(encoding="utf-8")
 
-    assert "以 JSON 格式输出分析结果" in text
+    assert "以 JSON 格式输出" in text
     assert '"core_trends"' in text
     assert '"rss_insights"' in text
     assert '"outlook_strategy"' in text
+    assert '"signals"' in text
+    assert '"sentiment_controversy"' in text
+    assert '"standalone_summaries"' in text
 
 
-def test_interests_prioritize_jobs_before_general_ai_news():
+def test_analysis_prioritizes_actionable_job_info():
+    """Prompt 要求求职信息给出行动项"""
+    text = PROMPT.read_text(encoding="utf-8")
+
+    assert "行动项" in text
+    assert "投递" in text
+    assert "不编造" in text
+
+
+def test_interests_cover_three_areas():
+    """兴趣描述覆盖三大板块"""
     text = INTERESTS.read_text(encoding="utf-8")
 
-    jobs_index = text.index("AI 实习、校招与提前批机会")
-    model_index = text.index("大模型与多模态进展")
+    # 三大板块
+    assert "今日热点速览" in text
+    assert "AI 资讯" in text
+    assert "求职与实习" in text
 
-    assert jobs_index < model_index
-    assert "岗位、城市、批次、截止时间或投递入口" in text
+    # 关键方向覆盖
+    assert "大模型" in text
+    assert "GitHub" in text
+    assert "后端" in text
+    assert "校招" in text

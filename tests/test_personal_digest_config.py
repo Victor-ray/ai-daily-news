@@ -19,6 +19,7 @@ def enabled_rss_feeds(config):
 
 
 def test_personal_digest_uses_incremental_ai_filtering():
+    """增量模式 + AI 筛选 + 关键字展示"""
     config = load_config()
 
     assert config["app"]["timezone"] == "Asia/Shanghai"
@@ -29,31 +30,38 @@ def test_personal_digest_uses_incremental_ai_filtering():
     assert config["ai_filter"]["min_score"] >= 0.7
 
 
-def test_rss_sources_are_fresh_https_and_targeted():
+def test_rss_sources_are_configured_for_three_sections():
+    """RSS 源覆盖三大板块：AI资讯、GitHub项目、求职实习"""
     config = load_config()
 
     assert config["rss"]["enabled"] is True
     assert config["rss"]["freshness_filter"] == {
         "enabled": True,
-        "max_age_days": 2,
+        "max_age_days": 7,
     }
 
     feeds = enabled_rss_feeds(config)
     feed_ids = {feed["id"] for feed in feeds}
 
-    assert {
-        "hacker-news-ai",
-        "hacker-news-openai",
-        "hacker-news-anthropic",
-        "github-trending-python",
-        "campus2026",
-        "weloveinterns",
-        "campus-recruitment-questions",
-    }.issubset(feed_ids)
+    # AI 资讯源
+    assert "hacker-news-ai" in feed_ids
+    assert "hacker-news-openai" in feed_ids
+    assert "hacker-news-anthropic" in feed_ids
+    assert "hacker-news-deepseek" in feed_ids
+    # GitHub 项目源
+    assert "github-trending-python" in feed_ids
+    assert "github-trending-all" in feed_ids
+    assert "hn-show" in feed_ids
+    # 求职实习源
+    assert "campus2026" in feed_ids
+    assert "weloveinterns" in feed_ids
+    assert "campus-recruitment-questions" in feed_ids
+
     assert all(feed["url"].startswith("https://") for feed in feeds)
 
 
 def test_secrets_are_not_committed():
+    """Webhook 和 API Key 不写入配置文件"""
     config = load_config()
 
     assert config["notification"]["channels"]["feishu"]["webhook_url"] == ""
@@ -61,6 +69,7 @@ def test_secrets_are_not_committed():
 
 
 def test_ai_analysis_is_chinese_bounded_and_includes_rss():
+    """AI 分析配置适配三大板块"""
     config = load_config()
 
     assert config["ai_analysis"]["enabled"] is True
