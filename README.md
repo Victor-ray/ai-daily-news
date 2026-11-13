@@ -1,3 +1,17 @@
+<!-- personal-organization:start -->
+## 本仓库的用途与来源
+
+- **分类**：自用工具与工作流 / 资讯采集与推送。
+- **上游来源**：[sansan0/TrendRadar](https://github.com/sansan0/TrendRadar)。下方保留上游项目说明、署名和许可证链接。
+- **本仓库入口**：个人配置见 [`config/`](config/)，定时与手动运行流程见 [每日资讯推送工作流](.github/workflows/crawler.yml)。
+- **维护方式**：更新前先区分上游代码和个人配置；本仓库与上游的具体差异尚未逐项核对。
+- **运行状态**：仓库中已有定时推送配置；是否近期执行成功、外部渠道是否可用，本次未验证。
+
+[返回个人仓库导航](https://github.com/Victor-ray/Study-Notes#个人仓库导航)
+<!-- personal-organization:end -->
+
+---
+
 <div align="center" id="trendradar">
 
 <a href="https://github.com/sansan0/TrendRadar" title="TrendRadar">
